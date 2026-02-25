@@ -24,3 +24,10 @@ A modular End-to-End ETL (Extract, Transform, Load) pipeline that pulls personal
 * Database schema is fully implemented.
 * Hero and Match ETL scripts are functional.
 * Orchestration (`main.py`) is under final development.
+
+some pictures: 
+
+<img width="1288" height="675" alt="Screenshot 2026-02-25 011411" src="https://github.com/user-attachments/assets/c22ffca2-2a18-4fbe-aa95-72e40012780c" />
+
+
+<img width="1039" height="936" alt="Screenshot 2026-02-25 011354" src="https://github.com/user-attachments/assets/ed0d24be-5dc2-4ade-a1fe-8047cff015a0" />
