@@ -2,14 +2,18 @@
 import psycopg2
 import logging
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 # Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 # Database connection parameters
 DB_CONFIG = {
     "dbname": "dota_etl",
-    "user": "your_username", # Replace with your actual username
-    "password": "your_password", # Replace with your actual password
+    "user": os.getenv("DB_USER"), # Replace with your actual username
+    "password": os.getenv("DB_PASSWORD"), # Replace with your actual password
     "host": "localhost",
     "port": "5432"
 }
