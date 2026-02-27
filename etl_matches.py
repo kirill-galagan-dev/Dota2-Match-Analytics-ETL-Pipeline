@@ -4,6 +4,7 @@ import psycopg2
 from psycopg2 import extras
 import logging
 from datetime import datetime
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 import os
 from dotenv import load_dotenv
@@ -22,21 +23,26 @@ DB_CONFIG = {
     "port": "5432"
 }
 
+
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
+def fetch_match_data(url):
+    logging.info(f"Attempting to fetch data from {url}...")
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    return response.json()
+
 # --- PHASE 1: EXTRACT ---
 def run_matches_etl():
     url = f"https://api.opendota.com/api/players/{PLAYER_ID}/recentMatches"
 
-
     try:
         logging.info(f"Extracting match history for Player {PLAYER_ID}...")
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
+        data = fetch_match_data(url)
 
-        # Load into Pandas DataFrame
-        df = pd.DataFrame(response.json())
+        df = pd.DataFrame(data)
         logging.info(f"Extracted {len(df)} matches with detailed stats.")
     except Exception as e:
-        logging.error(f"Extraction failed: {e}")
+        logging.error(f"Extraction failed after all retries: {e}")
         return
 
     # --- PHASE 2: TRANSFORM ---
